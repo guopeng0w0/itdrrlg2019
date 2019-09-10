@@ -214,6 +214,7 @@
     WHERE username=#{username} and question=#{question} and answer=#{answer}
 
   </select>
+
   <!--忘记密码的重设密码-->
   <update id="updatePassword" parameterType="map">
     update neuedu_user
@@ -222,5 +223,10 @@
       update_time = now()
     where username=#{username}
   </update>
+
+  <!--检查用户名是否存在-->
+  <select id="check_valid" parameterType="map" resultType="string">
+
+  </select>
 
 </mapper>

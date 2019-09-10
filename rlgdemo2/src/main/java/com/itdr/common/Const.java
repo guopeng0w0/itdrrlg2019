@@ -23,7 +23,7 @@ public class Const {
     public static final Integer USER_TRUE_CODE = 0;
     public static final String USER_TRUE_MSG = "登录成功";
     public static final String USER_RESULT_MSG = "注册信息不能为空";
-    public static final String USER_YESRESULT_MSG = "注册成功";
+    public static final String USER_YESRESULT_MSG = "用户注册成功";
 
     public static final String USER_EMAIL_MSG = "邮箱已注册";
 
