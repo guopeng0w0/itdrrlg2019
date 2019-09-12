@@ -17,19 +17,10 @@
     id, username, password, email, phone, question, answer, role, create_time, update_time
   </sql>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from neuedu_user
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from neuedu_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-
-
 
   <insert id="insertSelective" parameterType="com.itdr.pojo.User">
     insert into neuedu_user
@@ -99,15 +90,32 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.itdr.pojo.User">
+  <update id="updateByPrimaryKey" parameterType="com.itdr.pojo.User">
+    update neuedu_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      question = #{question,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR},
+      role = #{role,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--获取当前登录用户的详细信息-->
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from neuedu_user
+    where id = #{id}
+  </select>
+
+  <!--登录状态更新个人信息-->
+  <update id="updateByPrimaryKeySelective" parameterType="User">
     update neuedu_user
     <set>
-      <if test="username != null">
-        username = #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null">
-        password = #{password,jdbcType=VARCHAR},
-      </if>
       <if test="email != null">
         email = #{email,jdbcType=VARCHAR},
       </if>
@@ -126,25 +134,9 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+      update_time = now()
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
-  <update id="updateByPrimaryKey" parameterType="com.itdr.pojo.User">
-    update neuedu_user
-    set username = #{username,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      question = #{question,jdbcType=VARCHAR},
-      answer = #{answer,jdbcType=VARCHAR},
-      role = #{role,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id}
   </update>
 
   <!--判断用户是否存在-->
@@ -193,7 +185,7 @@
   select
     id, username, email, phone, question, answer, role, create_time, update_time
   from neuedu_user
-  where username = #{param1} and password = #{param2}
+  where username = #{username} and password = #{password}
   </select>
 
   <!--根据用户名查询密保问题-->
@@ -216,17 +208,28 @@
   </select>
 
   <!--忘记密码的重设密码-->
-  <update id="updatePassword" parameterType="map">
+  <update id="forgetResetPassword" parameterType="map">
     update neuedu_user
     set
-      password = #{password},
+      password = #{passwordnew},
       update_time = now()
     where username=#{username}
   </update>
 
-  <!--检查用户名是否存在-->
-  <select id="check_valid" parameterType="map" resultType="string">
-
+  <!--验证旧密码-->
+  <select id="selectByIdAndPassword" parameterType="map" resultType="java.lang.Integer">
+    select count(id)
+   from neuedu_user
+    WHERE id=#{id} and password=#{passwordOld}
   </select>
+
+  <!--验证新密码-->
+  <update id="updataByUserNameAndPassword" parameterType="map">
+    update neuedu_user
+    set
+      password = #{passwordNew},
+      update_time = now()
+    where username=#{username}
+  </update>
 
 </mapper>

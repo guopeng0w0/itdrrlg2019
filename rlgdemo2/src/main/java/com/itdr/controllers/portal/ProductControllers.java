@@ -1,4 +1,4 @@
-package com.itdr.controllers;
+package com.itdr.controllers.portal;
 
 public class ProductControllers {
 }

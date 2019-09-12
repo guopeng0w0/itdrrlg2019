@@ -1,9 +1,7 @@
 package com.itdr.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.sun.org.apache.regexp.internal.RE;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,7 +15,7 @@ public class ServerResponse<T> implements Serializable {
 
     //获取成功的对象，包括状态码和数据
     private ServerResponse(T data){
-        this.status = 0;
+        this.status = Const.USER_SUCESS_CODE;
         this.data = data;
     }
 
@@ -42,11 +40,11 @@ public class ServerResponse<T> implements Serializable {
 
     //获取失败的对象，包括失败信息
     private ServerResponse(String msg){
-        this.status = 100;
+        this.status = Const.USER_ERROR_CODE;
         this.msg = msg;
     }
 
-    //成功的时候只传入状态码
+    //成功的时候只传入数据
     public static <T> ServerResponse sucessRS(T data){
         return new ServerResponse(data);
     }
@@ -55,7 +53,6 @@ public class ServerResponse<T> implements Serializable {
     public static <T> ServerResponse sucessRS(Integer status,T data){
         return new ServerResponse(status,data);
     }
-
 
     //成功的时候只传入状态码和数据和信息
     public static <T> ServerResponse sucessRS(Integer status,T data,String msg){
@@ -73,10 +70,9 @@ public class ServerResponse<T> implements Serializable {
     }
 
 
-    //判断是否登录成功
+    //判断是否登录成功，过滤属性
     @JsonIgnore
     public boolean isSucess(){
-
-        return this.status == 0;
+        return this.status == Const.USER_SUCESS_CODE;
     }
 }
